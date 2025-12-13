@@ -175,7 +175,7 @@ header p{
 
 <div class="site">
 <header>
-  <h1 id="siteTitle">Google Docs</h1>
+  <h1>Google Docs</h1>
   <p>Instant play. No limits. Just games.</p>
   <div class="search-wrap">
     <input id="search" placeholder="Search games...">
@@ -219,15 +219,6 @@ function draw(){
 }
 resize();draw();
 addEventListener("resize",resize);
-
-/* ===== about:blank iframe ===== */
-if(localStorage.openBlank==="1" && location.hostname){
-  const win=window.open("about:blank","_self");
-  win.document.write(`
-    <style>html,body,iframe{margin:0;width:100%;height:100%;border:none}</style>
-    <iframe src="${location.href}"></iframe>
-  `);
-}
 
 /* ===== LOAD GAMES + IMAGE FINDER ===== */
 const user="cleverman456",repo="googledocsalt.github.io";
@@ -274,7 +265,7 @@ function openGame(slug){
     <div class="modal-window">
       <div class="modal-header">
         <span>${slug}</span>
-        <span onclick="this.closest('.modal-bg').remove()">✖</span>
+        <span style="cursor:pointer" onclick="this.closest('.modal-bg').remove()">✖</span>
       </div>
       <iframe src="assets/${slug}.html" class="game-frame"></iframe>
       <div class="modal-footer">
@@ -291,12 +282,6 @@ document.getElementById("search").oninput=e=>{
   document.querySelectorAll(".game-card").forEach(c=>{
     c.style.display=c.dataset.title.includes(q)?"":"none";
   });
-};
-
-/* ===== SETTINGS (simple toggle retained) ===== */
-document.getElementById("settingsBtn").onclick=()=>{
-  localStorage.openBlank=localStorage.openBlank==="1"?"":"1";
-  alert("about:blank mode " + (localStorage.openBlank?"enabled":"disabled"));
 };
 </script>
 </body>
