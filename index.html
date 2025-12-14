@@ -12,171 +12,42 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;background:#0f1115}
-body{
-  min-height:100vh;
-  font-family:Inter,sans-serif;
-  color:#fff;
-  overflow-x:hidden
-}
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none
-}
+body{min-height:100vh;font-family:Inter,sans-serif;color:#fff;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .site{position:relative;z-index:2}
 
-header{
-  padding:32px 20px 18px;
-  text-align:center
-}
-header h1{
-  font-size:2.2rem;
-  font-weight:700
-}
-header p{
-  margin-top:6px;
-  color:#9aa0aa
-}
+header{padding:32px 20px 18px;text-align:center}
+header h1{font-size:2.2rem;font-weight:700}
+header p{margin-top:6px;color:#9aa0aa}
 
-.search-wrap{
-  margin:18px auto 10px;
-  max-width:520px;
-  display:flex;
-  gap:10px
-}
-.search-wrap input{
-  flex:1;
-  padding:10px 14px;
-  border-radius:12px;
-  border:none;
-  background:#1c1f28;
-  color:#fff
-}
-.search-wrap button{
-  padding:10px 14px;
-  border-radius:12px;
-  border:none;
-  background:#2c3040;
-  color:#fff;
-  cursor:pointer
-}
+.search-wrap{margin:18px auto 10px;max-width:520px;display:flex;gap:10px}
+.search-wrap input{flex:1;padding:10px 14px;border-radius:12px;border:none;background:#1c1f28;color:#fff}
+.search-wrap button{padding:10px 14px;border-radius:12px;border:none;background:#2c3040;color:#fff;cursor:pointer}
 .search-wrap button:hover{background:#393f55}
 
-.games-wrapper{
-  max-width:1300px;
-  margin:0 auto;
-  padding:20px
-}
-.games-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:18px
-}
-.game-card{
-  background:rgba(22,25,34,.95);
-  border-radius:18px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.18s;
-  box-shadow:0 6px 18px rgba(0,0,0,.22)
-}
-.game-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 12px 28px rgba(0,0,0,.42)
-}
-.game-thumb{
-  width:100%;
-  aspect-ratio:1/1;
-  background:#222;
-  background-size:cover;
-  background-position:center;
-  position:relative;
-  border-radius:8px;
-}
-.play-overlay{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(3,122,255,.12);
-  font-weight:700;
-  opacity:0;
-  transition:.18s
-}
+.games-wrapper{max-width:1300px;margin:0 auto;padding:20px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.game-card{background:rgba(22,25,34,.95);border-radius:18px;overflow:hidden;cursor:pointer;transition:.18s;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.game-card:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,.42)}
+.game-thumb{width:100%;aspect-ratio:1/1;background:#222;background-size:cover;background-position:center;position:relative;border-radius:8px;}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,122,255,.12);font-weight:700;opacity:0;transition:.18s}
 .game-card:hover .play-overlay{opacity:1}
 .game-info{padding:12px 14px 16px}
-.game-title{
-  font-weight:600;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis
-}
+.game-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .game-meta{font-size:.75rem;color:#9aa0aa}
 
 /* MODAL */
-.modal-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:1000
-}
-.modal-window{
-  width:92%;
-  max-width:1100px;
-  height:84%;
-  background:#181b24;
-  border-radius:14px;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden
-}
-.modal-header,.modal-footer{
-  padding:12px 18px;
-  background:#20232d;
-  display:flex;
-  justify-content:space-between;
-  align-items:center
-}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-window{width:92%;max-width:1100px;height:84%;background:#181b24;border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.modal-header,.modal-footer{padding:12px 18px;background:#20232d;display:flex;justify-content:space-between;align-items:center}
 .game-frame{flex:1;border:none}
 
 /* SETTINGS PANEL */
-.settings-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000
-}
-.settings{
-  width:380px;
-  background:#181b24;
-  border-radius:14px;
-  padding:18px
-}
-.settings h2{
-  margin-bottom:12px;
-  font-size:1.1rem
-}
-.settings label{
-  font-size:.9rem;
-  color:#9aa0aa
-}
-.settings select, .settings button{
-  width:100%;
-  margin-top:6px;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  background:#2c3040;
-  color:#fff
-}
+.settings-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:2000}
+.settings{width:380px;background:#181b24;border-radius:14px;padding:18px}
+.settings h2{margin-bottom:12px;font-size:1.1rem}
+.settings label{font-size:.9rem;color:#9aa0aa}
+.settings select,.settings button{width:100%;margin-top:6px;padding:10px;border-radius:10px;border:none;background:#2c3040;color:#fff}
 .settings button:hover{background:#393f55}
 </style>
 </head>
@@ -203,7 +74,6 @@ header p{
 <div class="settings-bg" id="settingsBG">
   <div class="settings">
     <h2>Settings</h2>
-
     <label>Cloak Template</label>
     <select id="cloakSelect">
       <option value="">None</option>
@@ -211,13 +81,10 @@ header p{
       <option value="drive">Google Drive</option>
       <option value="clever">Clever</option>
     </select>
-
     <label style="margin-top:10px">Randomize Tab</label>
     <button onclick="randomizeTab()">Random Title & Favicon</button>
-
     <label style="margin-top:10px">Panic Key</label>
     <p style="font-size:.75rem;color:#777">Press <b>ESC</b> to instantly cloak</p>
-
     <button style="margin-top:14px" onclick="closeSettings()">Close</button>
   </div>
 </div>
@@ -227,77 +94,23 @@ header p{
 const canvas=document.getElementById("stars");
 const ctx=canvas.getContext("2d");
 let w,h,stars=[];
-function resize(){
-  w=canvas.width=innerWidth;
-  h=canvas.height=innerHeight;
-  stars=Array.from({length:(w*h)/9000},()=>({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:Math.random()*1.4+.3,
-    s:Math.random()*.25+.05,
-    t:Math.random()*Math.PI*2
-  }));
-}
-function draw(){
-  ctx.clearRect(0,0,w,h);
-  stars.forEach(s=>{
-    s.y+=s.s;
-    s.t+=.03;
-    if(s.y>h)s.y=-10;
-    ctx.fillStyle=`rgba(255,255,255,${.6+Math.sin(s.t)*.4})`;
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-  });
-  requestAnimationFrame(draw);
-}
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;stars=Array.from({length:(w*h)/9000},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,s:Math.random()*.25+.05,t:Math.random()*Math.PI*2}));}
+function draw(){ctx.clearRect(0,0,w,h);stars.forEach(s=>{s.y+=s.s;s.t+=.03;if(s.y>h)s.y=-10;ctx.fillStyle=`rgba(255,255,255,${.6+Math.sin(s.t)*.4})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});requestAnimationFrame(draw);}
 resize();draw();
 addEventListener("resize",resize);
 
 /* ===== SETTINGS ===== */
-const cloaks={
-  docs:{title:"Google Docs",icon:"https://upload.wikimedia.org/wikipedia/commons/e/ec/GDocs_Favicon_Recreation.png"},
-  drive:{title:"Google Drive",icon:"https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png"},
-  clever:{title:"Clever | Log in",icon:"https://assets.clever.com/favicon.ico"}
-};
+const cloaks={docs:{title:"Google Docs",icon:"https://upload.wikimedia.org/wikipedia/commons/e/ec/GDocs_Favicon_Recreation.png"},drive:{title:"Google Drive",icon:"https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png"},clever:{title:"Clever | Log in",icon:"https://assets.clever.com/favicon.ico"}};
 const settingsBG=document.getElementById("settingsBG");
 const cloakSelect=document.getElementById("cloakSelect");
 const favicon=document.getElementById("favicon");
-
 function openSettings(){settingsBG.style.display="flex"}
 function closeSettings(){settingsBG.style.display="none"}
-
-cloakSelect.onchange=()=>{
-  const c=cloaks[cloakSelect.value];
-  if(!c)return;
-  document.title=c.title;
-  favicon.href=c.icon;
-  localStorage.setItem("cloak",cloakSelect.value);
-};
-
-/* Restore cloak */
+cloakSelect.onchange=()=>{const c=cloaks[cloakSelect.value];if(!c)return;document.title=c.title;favicon.href=c.icon;localStorage.setItem("cloak",cloakSelect.value)};
 const saved=localStorage.getItem("cloak");
-if(saved&&cloaks[saved]){
-  document.title=cloaks[saved].title;
-  favicon.href=cloaks[saved].icon;
-  cloakSelect.value=saved;
-}
-
-/* Panic Key */
-addEventListener("keydown",e=>{
-  if(e.key==="Escape"){
-    document.title=cloaks.docs.title;
-    favicon.href=cloaks.docs.icon;
-  }
-});
-
-/* Randomizer */
-function randomizeTab(){
-  const list=Object.values(cloaks);
-  const r=list[Math.floor(Math.random()*list.length)];
-  document.title=r.title;
-  favicon.href=r.icon;
-}
+if(saved&&cloaks[saved]){document.title=cloaks[saved].title;favicon.href=cloaks[saved].icon;cloakSelect.value=saved;}
+addEventListener("keydown",e=>{if(e.key==="Escape"){document.title=cloaks.docs.title;favicon.href=cloaks.docs.icon}});
+function randomizeTab(){const list=Object.values(cloaks);const r=list[Math.floor(Math.random()*list.length)];document.title=r.title;favicon.href=r.icon}
 
 /* ===== SEARCH ===== */
 const search=document.getElementById("search");
@@ -317,7 +130,7 @@ async function initGames(){
   // Fetch images
   const imgRes = await fetch(IMGS_API);
   const imgFiles = await imgRes.json();
-  const availableImages = imgFiles.map(f => f.name);
+  const availableImages = imgFiles.map(f => f.name.toLowerCase());
 
   // Fetch HTML games
   const assetRes = await fetch(ASSETS_API);
@@ -328,10 +141,11 @@ async function initGames(){
     entries.forEach(entry => {
       if(entry.isIntersecting){
         const thumb = entry.target.querySelector(".game-thumb");
-        const slug = entry.target.dataset.title;
+        const slug = entry.target.dataset.title.toLowerCase();
 
         const exts = ["png","jpg","jpeg","webp"];
         let found = false;
+
         for(const ext of exts){
           const name = `${slug}.${ext}`;
           if(availableImages.includes(name)){
@@ -340,14 +154,10 @@ async function initGames(){
             img.onload = () => {
               if(!found){
                 found = true;
-                requestAnimationFrame(()=>{
-                  thumb.style.backgroundImage=`url(${img.src})`;
-                  thumb.style.backgroundSize="cover";
-                  thumb.style.backgroundPosition="center";
-                });
+                thumb.style.backgroundImage = `url(${img.src})`;
               }
             };
-            break;
+            break; // stop checking extensions after first found
           }
         }
 
@@ -361,17 +171,16 @@ async function initGames(){
   }, {rootMargin:"150px"});
 
   games.forEach(f => {
-    const slug = f.name.replace(".html","");
+    const slug = f.name.replace(".html","").toLowerCase();
     const card = document.createElement("div");
     card.className = "game-card";
-    card.dataset.title = slug.toLowerCase();
+    card.dataset.title = slug;
 
     const thumb = document.createElement("div");
     thumb.className = "game-thumb";
-    thumb.style.backgroundColor = "#222";
     thumb.innerHTML = `<div class="play-overlay">▶ Play</div>`;
 
-    card.innerHTML = `
+    card.innerHTML += `
       <div class="game-info">
         <div class="game-title">${slug.replace(/-/g," ")}</div>
         <div class="game-meta">Play Now</div>
@@ -387,9 +196,6 @@ async function initGames(){
 }
 
 initGames();
-
-
-
 
 /* ===== MODAL ===== */
 function openGame(slug){
