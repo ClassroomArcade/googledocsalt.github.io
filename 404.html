@@ -1,33 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>404 – Page Not Found</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
-      text-align: center;
-    }
-    a {
-      color: #4da3ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>404 – Not Found</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link id="favicon" rel="icon" href="./imgs/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;background:#0f1115}
+body{min-height:100vh;font-family:Inter,sans-serif;color:#fff;overflow-x:hidden;display:flex;justify-content:center;align-items:center;text-align:center}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.notfound-wrapper{
+  position:relative;
+  z-index:2;
+  max-width:600px;
+  padding:20px;
+}
+
+.notfound-wrapper h1{
+  font-size:4rem;
+  font-weight:700;
+  margin-bottom:16px;
+}
+
+.notfound-wrapper p{
+  color:#9aa0aa;
+  font-size:1.2rem;
+  margin-bottom:24px;
+}
+
+.notfound-wrapper a{
+  padding:12px 24px;
+  background:#037aff;
+  color:#fff;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.2s;
+}
+
+.notfound-wrapper a:hover{
+  background:#005fcc;
+}
+</style>
 </head>
+
 <body>
-  <div>
-    <h1>404</h1>
-    <p>This page doesn’t exist.</p>
-    <a href="/">Go back home</a>
-  </div>
+<canvas id="stars"></canvas>
+
+<div class="notfound-wrapper">
+  <h1>404 Not Found</h1>
+  <p>The page you are looking for does not exist. Check the URL or return home to explore games.</p>
+  <a href="/">Go back home</a>
+</div>
+
+<script>
+/* ===== STAR BACKGROUND ===== */
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+let w,h,stars=[];
+function resize(){
+  w=canvas.width=innerWidth;
+  h=canvas.height=innerHeight;
+  stars=Array.from({length:(w*h)/9000},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,s:Math.random()*.25+.05,t:Math.random()*Math.PI*2}));
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  stars.forEach(s=>{
+    s.y+=s.s;
+    s.t+=.03;
+    if(s.y>h) s.y=-10;
+    ctx.fillStyle=`rgba(255,255,255,${.6+Math.sin(s.t)*.4})`;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+resize();
+draw();
+addEventListener("resize",resize);
+</script>
 </body>
 </html>
