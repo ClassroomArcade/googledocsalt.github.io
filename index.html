@@ -2,59 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FoundryGames</title>
+<title id="tabTitle">FoundryGames</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="./imgs/favicon.ico">
+<link id="favicon" rel="icon" href="./imgs/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Inter,sans-serif;
-  background:#0f1115;
-  color:#fff;
-  overflow-x:hidden;
-}
+html,body{height:100%;background:#0f1115}
+body{font-family:Inter,sans-serif;color:#fff;overflow-x:hidden}
 
-header{
-  text-align:center;
-  padding:40px 20px 24px;
+#stars{
+  position:fixed;
+  inset:0;
+  z-index:0;
 }
-header h1{
-  font-size:2.6rem;
-  font-weight:700;
-}
-header p{
-  color:#9aa0aa;
-  margin-top:6px;
-}
+.site{position:relative;z-index:1}
+
+/* HEADER */
+header{text-align:center;padding:40px 20px 24px}
+header h1{font-size:2.6rem;font-weight:700}
+header p{color:#9aa0aa;margin-top:6px}
 
 .search-wrap{
-  max-width:520px;
   margin:18px auto 0;
+  max-width:520px;
+  display:flex;
+  gap:10px;
 }
 .search-wrap input{
-  width:100%;
+  flex:1;
   padding:12px 16px;
   border-radius:14px;
   border:none;
   background:#1c1f28;
   color:#fff;
-  font-size:1rem;
+}
+.search-wrap button{
+  padding:12px 16px;
+  border-radius:14px;
+  border:none;
+  background:#2c3040;
+  color:#fff;
+  cursor:pointer;
 }
 
-.games-wrapper{
-  max-width:1300px;
-  margin:auto;
-  padding:20px;
-}
-.games-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:18px;
-}
+/* GRID */
+.games-wrapper{max-width:1300px;margin:auto;padding:20px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
 
-/* GAME CARD */
+/* CARD */
 .game-card{
   background:#161922;
   border-radius:18px;
@@ -62,11 +59,8 @@ header p{
   cursor:pointer;
   transition:.2s;
 }
-.game-card:hover{
-  transform:translateY(-6px);
-}
+.game-card:hover{transform:translateY(-6px)}
 
-/* THUMB */
 .game-thumb{
   height:150px;
   background:#222 center/cover;
@@ -79,16 +73,11 @@ header p{
   align-items:center;
   justify-content:center;
   background:rgba(0,0,0,.35);
-  font-weight:700;
-  font-size:1.1rem;
   opacity:0;
-  transition:.2s;
+  font-weight:700;
 }
-.game-card:hover .play-overlay{
-  opacity:1;
-}
+.game-card:hover .play-overlay{opacity:1}
 
-/* MISSING BADGE */
 .missing-badge{
   position:absolute;
   top:8px;
@@ -101,20 +90,41 @@ header p{
   display:none;
 }
 
-/* INFO */
-.game-info{
-  padding:14px 16px;
-}
+.game-info{padding:14px 16px}
 .game-title{
   font-weight:600;
-  font-size:1rem;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.game-meta{
-  font-size:.8rem;
-  color:#9aa0aa;
+.game-meta{font-size:.8rem;color:#9aa0aa}
+
+/* SETTINGS */
+.settings-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+.settings{
+  width:360px;
+  background:#181b24;
+  border-radius:14px;
+  padding:18px;
+}
+.settings h2{margin-bottom:12px}
+.settings button{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#2c3040;
+  color:#fff;
+  cursor:pointer;
 }
 
 /* MODAL */
@@ -135,108 +145,132 @@ header p{
   border-radius:16px;
   display:flex;
   flex-direction:column;
-  overflow:hidden;
 }
-.modal-header,
-.modal-footer{
-  padding:16px 20px;
+.modal-header,.modal-footer{
+  padding:16px;
   background:#20232d;
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
-.modal-header span:first-child{
-  font-weight:600;
-}
-.modal-header span:last-child{
-  cursor:pointer;
-}
-.modal-footer button{
-  padding:10px 18px;
-  border-radius:10px;
-  border:none;
-  background:#2c3040;
-  color:#fff;
-  cursor:pointer;
-}
-.modal-footer button:last-child{
-  background:#037aff;
-}
-.game-frame{
-  flex:1;
-  border:none;
-}
+.game-frame{flex:1;border:none}
 </style>
 </head>
 
 <body>
 
+<canvas id="stars"></canvas>
+
+<div class="site">
 <header>
   <h1>FoundryGames</h1>
   <p>Instant play. No limits. Just games.</p>
   <div class="search-wrap">
     <input id="search" placeholder="Search games...">
+    <button onclick="openSettings()">⚙</button>
   </div>
 </header>
 
 <main class="games-wrapper">
   <div class="games-grid" id="grid"></div>
 </main>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-bg" id="settingsBG">
+  <div class="settings">
+    <h2>Settings</h2>
+    <button onclick="randomizeTab()">Randomize Tab</button>
+    <button onclick="closeSettings()">Close</button>
+  </div>
+</div>
 
 <script>
-const grid = document.getElementById("grid");
-const search = document.getElementById("search");
+/* ⭐ STAR BACKGROUND (FIXED) */
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+let stars=[],w,h;
 
-const IMG_BASE = "./imgs";
-const ASSETS_API =
-  "https://api.github.com/repos/cleverman456/googledocsalt.github.io/contents/assets";
+function resize(){
+  w=canvas.width=innerWidth;
+  h=canvas.height=innerHeight;
+  stars=Array.from({length:(w*h)/8000},()=>({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    r:Math.random()*1.5+.3,
+    s:Math.random()*.4+.1
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  stars.forEach(s=>{
+    s.y+=s.s;
+    if(s.y>h)s.y=-10;
+    ctx.fillStyle="rgba(255,255,255,.8)";
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+resize();draw();
+addEventListener("resize",resize);
+
+/* SETTINGS */
+const settingsBG=document.getElementById("settingsBG");
+function openSettings(){settingsBG.style.display="flex"}
+function closeSettings(){settingsBG.style.display="none"}
+function randomizeTab(){
+  const titles=["Google Docs","Google Drive","Classroom"];
+  document.title=titles[Math.floor(Math.random()*titles.length)];
+}
 
 /* SEARCH */
-search.oninput = e => {
-  const q = e.target.value.toLowerCase();
-  document.querySelectorAll(".game-card").forEach(card=>{
-    card.style.display = card.dataset.title.toLowerCase().includes(q)
-      ? ""
-      : "none";
+search.oninput=e=>{
+  const q=e.target.value.toLowerCase();
+  document.querySelectorAll(".game-card").forEach(c=>{
+    c.style.display=c.dataset.title.toLowerCase().includes(q)?"":"none";
   });
 };
 
-/* INIT GAMES */
+/* GAMES */
+const grid=document.getElementById("grid");
+const IMG_BASE="./imgs";
+const ASSETS_API="https://api.github.com/repos/cleverman456/googledocsalt.github.io/contents/assets";
+
 async function initGames(){
-  const res = await fetch(ASSETS_API);
-  const files = await res.json();
+  const res=await fetch(ASSETS_API);
+  const files=await res.json();
 
-  const games = files
-    .filter(f => f.name.endsWith(".html"))
-    .map(f => f.name.replace(".html",""))
-    .sort((a,b)=>a.localeCompare(b)); // ✅ ALPHABETIZED
+  const games=files
+    .filter(f=>f.name.endsWith(".html"))
+    .map(f=>f.name.replace(".html",""))
+    .sort((a,b)=>a.localeCompare(b));
 
-  const observer = new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting) return;
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const card=e.target;
+      const slug=card.dataset.title;
+      const thumb=card.querySelector(".game-thumb");
+      const badge=card.querySelector(".missing-badge");
 
-      const card = entry.target;
-      const slug = card.dataset.title;
-      const thumb = card.querySelector(".game-thumb");
-      const badge = card.querySelector(".missing-badge");
+      const exts=["png","jpg","jpeg","webp"];
+      let loaded=false;
 
-      const exts = ["png","jpg","jpeg","webp"];
-      let loaded = false;
-
-      const tryLoad = i => {
-        if(i >= exts.length){
-          badge.style.display = "block"; // ✅ MISSING IMAGE BADGE
+      const tryLoad=i=>{
+        if(i>=exts.length){
+          badge.style.display="block";
           return;
         }
-        const img = new Image();
-        img.src = `${IMG_BASE}/${slug}.${exts[i]}`;
-        img.onload = ()=>{
+        const img=new Image();
+        img.src=IMG_BASE+"/"+encodeURIComponent(slug)+"."+exts[i];
+        img.onload=()=>{
           if(!loaded){
-            loaded = true;
-            thumb.style.backgroundImage = `url(${img.src})`;
+            loaded=true;
+            thumb.style.backgroundImage=`url(${img.src})`;
           }
         };
-        img.onerror = ()=>tryLoad(i+1);
+        img.onerror=()=>tryLoad(i+1);
       };
 
       tryLoad(0);
@@ -245,11 +279,10 @@ async function initGames(){
   },{rootMargin:"150px"});
 
   games.forEach(slug=>{
-    const card = document.createElement("div");
-    card.className = "game-card";
-    card.dataset.title = slug;
-
-    card.innerHTML = `
+    const card=document.createElement("div");
+    card.className="game-card";
+    card.dataset.title=slug;
+    card.innerHTML=`
       <div class="game-thumb">
         <div class="missing-badge">Missing Image</div>
         <div class="play-overlay">▶ Play</div>
@@ -259,32 +292,29 @@ async function initGames(){
         <div class="game-meta">Play Now</div>
       </div>
     `;
-
-    card.onclick = ()=>openGame(slug);
+    card.onclick=()=>openGame(slug);
     grid.appendChild(card);
     observer.observe(card);
   });
 }
-
 initGames();
 
 /* MODAL */
 function openGame(slug){
-  const m = document.createElement("div");
-  m.className = "modal-bg";
-  m.innerHTML = `
+  const m=document.createElement("div");
+  m.className="modal-bg";
+  m.innerHTML=`
     <div class="modal-window">
       <div class="modal-header">
         <span>${slug}</span>
         <span onclick="this.closest('.modal-bg').remove()">✖</span>
       </div>
-      <iframe src="assets/${slug}.html" class="game-frame"></iframe>
+      <iframe src="assets/${encodeURIComponent(slug)}.html" class="game-frame"></iframe>
       <div class="modal-footer">
         <button onclick="this.closest('.modal-bg').remove()">Close</button>
         <button onclick="document.querySelector('.game-frame').requestFullscreen()">⛶ Fullscreen</button>
       </div>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(m);
 }
 </script>
