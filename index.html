@@ -5,25 +5,24 @@
 <title id="tabTitle">FoundryGames</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link id="favicon" rel="icon" href="./imgs/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#0f1115}
-body{font-family:Inter,sans-serif;color:#fff;overflow-x:hidden}
+html{height:100%;background:#0f1115}
+body{min-height:100vh;font-family:Inter,sans-serif;color:#fff;overflow-x:hidden}
 
-#stars{
-  position:fixed;
-  inset:0;
-  z-index:0;
-}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .site{position:relative;z-index:1}
 
 /* HEADER */
 header{text-align:center;padding:40px 20px 24px}
 header h1{font-size:2.6rem;font-weight:700}
-header p{color:#9aa0aa;margin-top:6px}
+header p{font-size:1.1rem;color:#9aa0aa;margin-top:6px}
 
+/* SEARCH */
 .search-wrap{
   margin:18px auto 0;
   max-width:520px;
@@ -73,8 +72,10 @@ header p{color:#9aa0aa;margin-top:6px}
   align-items:center;
   justify-content:center;
   background:rgba(0,0,0,.35);
-  opacity:0;
   font-weight:700;
+  font-size:1.1rem;
+  opacity:0;
+  transition:.2s;
 }
 .game-card:hover .play-overlay{opacity:1}
 
@@ -99,7 +100,7 @@ header p{color:#9aa0aa;margin-top:6px}
 }
 .game-meta{font-size:.8rem;color:#9aa0aa}
 
-/* SETTINGS */
+/* SETTINGS (OLD MENU RESTORED) */
 .settings-bg{
   position:fixed;
   inset:0;
@@ -110,15 +111,16 @@ header p{color:#9aa0aa;margin-top:6px}
   z-index:2000;
 }
 .settings{
-  width:360px;
+  width:380px;
   background:#181b24;
   border-radius:14px;
   padding:18px;
 }
 .settings h2{margin-bottom:12px}
-.settings button{
+.settings label{font-size:.95rem;color:#9aa0aa}
+.settings select,.settings button{
   width:100%;
-  margin-top:10px;
+  margin-top:8px;
   padding:12px;
   border-radius:12px;
   border:none;
@@ -179,13 +181,24 @@ header p{color:#9aa0aa;margin-top:6px}
 <div class="settings-bg" id="settingsBG">
   <div class="settings">
     <h2>Settings</h2>
-    <button onclick="randomizeTab()">Randomize Tab</button>
-    <button onclick="closeSettings()">Close</button>
+    <label>Cloak Template</label>
+    <select id="cloakSelect">
+      <option value="">None</option>
+      <option value="docs">Google Docs</option>
+      <option value="drive">Google Drive</option>
+      <option value="clever">Clever</option>
+      <option value="classroom">Classroom</option>
+    </select>
+    <label style="margin-top:10px">Randomize Tab</label>
+    <button onclick="randomizeTab()">Random Title & Favicon</button>
+    <label style="margin-top:10px">Panic Key</label>
+    <p style="font-size:.75rem;color:#777">Press <b>ESC</b> to cloak</p>
+    <button style="margin-top:14px" onclick="closeSettings()">Close</button>
   </div>
 </div>
 
 <script>
-/* ⭐ STAR BACKGROUND (FIXED) */
+/* ⭐ STAR BACKGROUND */
 const canvas=document.getElementById("stars");
 const ctx=canvas.getContext("2d");
 let stars=[],w,h;
@@ -193,11 +206,11 @@ let stars=[],w,h;
 function resize(){
   w=canvas.width=innerWidth;
   h=canvas.height=innerHeight;
-  stars=Array.from({length:(w*h)/8000},()=>({
+  stars=Array.from({length:(w*h)/9000},()=>({
     x:Math.random()*w,
     y:Math.random()*h,
-    r:Math.random()*1.5+.3,
-    s:Math.random()*.4+.1
+    r:Math.random()*1.4+.3,
+    s:Math.random()*.25+.05
   }));
 }
 function draw(){
@@ -215,13 +228,32 @@ function draw(){
 resize();draw();
 addEventListener("resize",resize);
 
-/* SETTINGS */
+/* SETTINGS LOGIC */
+const cloaks={
+  docs:{title:"Google Docs",icon:"https://upload.wikimedia.org/wikipedia/commons/e/ec/GDocs_Favicon_Recreation.png"},
+  drive:{title:"Google Drive",icon:"https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png"},
+  clever:{title:"Clever | Log in",icon:"https://assets.clever.com/favicon.ico"},
+  classroom:{title:"Google Classroom",icon:"https://www.gstatic.com/classroom/logo_square_rounded.svg"}
+};
 const settingsBG=document.getElementById("settingsBG");
+const cloakSelect=document.getElementById("cloakSelect");
+const favicon=document.getElementById("favicon");
+
 function openSettings(){settingsBG.style.display="flex"}
 function closeSettings(){settingsBG.style.display="none"}
+
+cloakSelect.onchange=()=>{
+  const c=cloaks[cloakSelect.value];
+  if(!c)return;
+  document.title=c.title;
+  favicon.href=c.icon;
+};
+
 function randomizeTab(){
-  const titles=["Google Docs","Google Drive","Classroom"];
-  document.title=titles[Math.floor(Math.random()*titles.length)];
+  const list=Object.values(cloaks);
+  const r=list[Math.floor(Math.random()*list.length)];
+  document.title=r.title;
+  favicon.href=r.icon;
 }
 
 /* SEARCH */
@@ -263,7 +295,7 @@ async function initGames(){
           return;
         }
         const img=new Image();
-        img.src=IMG_BASE+"/"+encodeURIComponent(slug)+"."+exts[i];
+        img.src=IMG_BASE+"/"+slug+"."+exts[i]; // ✅ NO ENCODING
         img.onload=()=>{
           if(!loaded){
             loaded=true;
@@ -309,7 +341,7 @@ function openGame(slug){
         <span>${slug}</span>
         <span onclick="this.closest('.modal-bg').remove()">✖</span>
       </div>
-      <iframe src="assets/${encodeURIComponent(slug)}.html" class="game-frame"></iframe>
+      <iframe src="assets/${slug}.html" class="game-frame"></iframe>
       <div class="modal-footer">
         <button onclick="this.closest('.modal-bg').remove()">Close</button>
         <button onclick="document.querySelector('.game-frame').requestFullscreen()">⛶ Fullscreen</button>
