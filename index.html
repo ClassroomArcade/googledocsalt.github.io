@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="./uv/uv.bundle.js"></script>
+<script src="./uv/uv.config.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { height: 100%; background: #0f1115; }
@@ -24,6 +26,19 @@ header p { font-size: 1.1rem; color: #9aa0aa; margin-top: 6px; }
 .search-wrap { margin: 18px auto 0; max-width: 520px; display: flex; gap: 10px; }
 .search-wrap input { flex: 1; padding: 12px 16px; border-radius: 14px; border: none; background: #1c1f28; color: #fff; }
 .search-wrap button { padding: 12px 16px; border-radius: 14px; border: none; background: #2c3040; color: #fff; cursor: pointer; }
+
+.proxy-search {
+  margin-top: 10px;
+}
+
+.proxy-search input {
+  background: #161922;
+}
+
+.proxy-search button {
+  background: #1f2330;
+}
+
 
 /* GRID */
 .games-wrapper { max-width: 1300px; margin: auto; padding: 20px; }
@@ -66,6 +81,11 @@ header p { font-size: 1.1rem; color: #9aa0aa; margin-top: 6px; }
       <input id="search" placeholder="Search games...">
       <button onclick="openSettings()">⚙</button>
     </div>
+    <div class="search-wrap proxy-search">
+  <input id="proxyInput" placeholder="Search or enter website…">
+  <button id="proxyBtn">🌐</button>
+    </div>
+
   </header>
   
   <main class="games-wrapper">
@@ -156,6 +176,15 @@ function randomizeTab() {
   favicon.href = r.icon;
 }
 
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    document.title = "Google Docs";
+    favicon.href = "https://upload.wikimedia.org/wikipedia/commons/e/ec/GDocs_Favicon_Recreation.png";
+    location.replace("about:blank");
+  }
+});
+
+
 /* SEARCH */
 search.oninput = e => {
   const q = e.target.value.toLowerCase();
@@ -237,6 +266,39 @@ function openGame(slug) {
     </div>`;
   document.body.appendChild(m);
 }
+
+/* =======================
+   UV PROXY (ISOLATED)
+   ======================= */
+
+document.getElementById("proxyBtn").onclick = () => {
+  let val = proxyInput.value.trim();
+  if (!val) return;
+
+  if (!val.includes("://")) val = "https://" + val;
+
+  const encoded = __uv$config.prefix + __uv$config.encodeUrl(val);
+  openProxyModal(encoded, val);
+};
+
+function openProxyModal(src, title) {
+  const m = document.createElement("div");
+  m.className = "modal-bg";
+  m.innerHTML = `
+    <div class="modal-window">
+      <div class="modal-header">
+        <span>${title}</span>
+        <span onclick="this.closest('.modal-bg').remove()">✖</span>
+      </div>
+      <iframe class="game-frame" src="${src}"></iframe>
+      <div class="modal-footer">
+        <button onclick="this.closest('.modal-bg').remove()">Close</button>
+        <button onclick="document.querySelector('.game-frame').requestFullscreen()">⛶ Fullscreen</button>
+      </div>
+    </div>`;
+  document.body.appendChild(m);
+}
+
 </script>
 
 </body>
